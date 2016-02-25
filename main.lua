@@ -61,13 +61,24 @@ function love.update(dt)
 		if player.y < (love.graphics.getHeight() - player.img:getHeight()) then
 			player.y = player.y + (player.speed * dt)
 		end
-	end		
+	end	
+
+	-- time out fish creation
+	createTrashTimer = createTrashTimer - (1 * dt)
+	if createTrashTimer < 0 then
+		createTrashTimer = createTrashTimerMax
+
+		-- create a fish
+		randomNumber = math.random(10, love.graphics.getWidth() - 10)
+		newTrash = { x = randomNumber , y = -10, img = trashImg}
+		table.insert(trashes, newTrash)
+	end	
 
 	-- actualizamos las posiciones de las basuras
 	for i, trash in ipairs(trashes) do
-		trash.y = trash.y - (250 * dt)
+		trash.y = trash.y + (250 * dt)
 
-		if trash.y < 0 then -- eliminamos las basuras cuando salen de la pantalla
+		if trash.y > love.graphics.getHeight() then -- eliminamos las basuras cuando salen de la pantalla
 			table.remove(trashes, i)
 		end
 	end
@@ -78,16 +89,16 @@ function love.update(dt)
 		createFishTimer = createFishTimerMax
 
 		-- create a fish
-		randomNumber = math.random(10, love.graphics.getWidth() - 10)
-		newFish = { x = randomNumber, y = -10, img = fishImg}
+		randomNumber = math.random(10, love.graphics.getHeight() - 10)
+		newFish = { x = -10 , y = randomNumber, img = fishImg}
 		table.insert(fishes, newFish)
 	end
 
 	-- actualizamos la posicion de los fishes
 	for i, fish in ipairs(fishes) do
-		fish.y = fishe.y + (250 * dt)
+		fish.x = fishe.x + (250 * dt)
 
-		if fish.y > love.graphics.getHeight() then -- eliminamos los fishes cuando salen de la pantalla
+		if fish.x > love.graphics.getWidth() then -- eliminamos los fishes cuando salen de la pantalla
 			table.remove(fishes, i)
 		end
 	end
