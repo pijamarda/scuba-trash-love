@@ -8,24 +8,28 @@ isAlive = true
 score = 0
 
 -- Timers
--- Los declaramos aqui para no tener que editarlos en multiples sitios
 
 createFishTimerMax = 0.4
-createFishTimer = createEnemyFishMax
+createFishTimer = createFishTimerMax
 
 createTrashTimerMax = 0.4
 createTrashTimer = createTrashTimerMax
 
--- Image storage
+-- Images storage
 trashImg = nil
 fishImg = nil
 
--- Sound
+-- Sounds
 gunSound = nil
 
 -- Entity Storage
 trashes = {} -- array con la basura que esta flotando
 fishes = {} -- array con los peces que van apareciendo
+
+-- CONSTANTS
+
+speedTrash = 250
+speedFish = 250
 
 function love.load(arg)
 	player.img = love.graphics.newImage('assets/Aircraft_03.png')
@@ -63,12 +67,12 @@ function love.update(dt)
 		end
 	end	
 
-	-- time out fish creation
+	-- time out trash creation
 	createTrashTimer = createTrashTimer - (1 * dt)
 	if createTrashTimer < 0 then
 		createTrashTimer = createTrashTimerMax
 
-		-- create a fish
+		-- create a trash
 		randomNumber = math.random(10, love.graphics.getWidth() - 10)
 		newTrash = { x = randomNumber , y = -10, img = trashImg}
 		table.insert(trashes, newTrash)
@@ -76,7 +80,7 @@ function love.update(dt)
 
 	-- actualizamos las posiciones de las basuras
 	for i, trash in ipairs(trashes) do
-		trash.y = trash.y + (250 * dt)
+		trash.y = trash.y + (speedTrash * dt)
 
 		if trash.y > love.graphics.getHeight() then -- eliminamos las basuras cuando salen de la pantalla
 			table.remove(trashes, i)
@@ -96,7 +100,7 @@ function love.update(dt)
 
 	-- actualizamos la posicion de los fishes
 	for i, fish in ipairs(fishes) do
-		fish.x = fishe.x + (250 * dt)
+		fish.x = fish.x + (speedFish * dt)
 
 		if fish.x > love.graphics.getWidth() then -- eliminamos los fishes cuando salen de la pantalla
 			table.remove(fishes, i)
