@@ -36,9 +36,25 @@ function love.load(arg)
 	trashImg = love.graphics.newImage('assets/bullet_2_orange.png')
 	fishImg = love.graphics.newImage('assets/enemy.png')
 	gunSound = love.audio.newSource('assets/gun-sound.wav', static)
+
+	-- Shader Effects TEST
+	effect = love.graphics.newShader [[
+        extern number time;
+        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
+        {
+            return vec4((1.0+sin(time))/2.0, abs(cos(time)), abs(sin(time)), 1.0);
+        }
+    ]]
+
 end
 
+
+local t = 0
 function love.update(dt)
+
+	t = t + dt
+    effect:send("time", t)
+    
 	if love.keyboard.isDown('escape') then
 		love.event.push('quit')
 	end
@@ -162,6 +178,16 @@ function love.draw(dt)
 	for i, fish in ipairs(fishes) do
 		love.graphics.draw(fish.img, fish.x, fish.y)
 	end
+
+	-- TEST
+	-- boring white
+    love.graphics.setShader()
+    love.graphics.rectangle('fill', 10,10,780,285)
+ 
+    -- LOOK AT THE PRETTY COLORS!
+    love.graphics.setShader(effect)
+    love.graphics.rectangle('fill', 10,305,780,285)
+
 end
 
 -- Collision detection taken function from http://love2d.org/wiki/BoundingBox.lua
