@@ -28,7 +28,7 @@ fishes = {} -- array con los peces que van apareciendo
 
 -- CONSTANTS
 
-speedTrash = 250
+speedTrash = 150
 speedFish = 250
 
 function love.load(arg)
@@ -82,6 +82,22 @@ function love.update(dt)
 			player.y = player.y + (player.speed * dt)
 		end
 	end	
+
+	-- Touch Movement
+
+	if love.touchpressed(id, x, y, dx, dy, pressure ) then
+		player.y = y
+		player.x = x
+	end
+
+	-- Mouse movement
+
+	if love.mouse.isDown(1) then
+		x = love.mouse.getX()
+		y = love.mouse.getY()
+		player.y = y
+		player.x = x
+	end
 
 	-- time out trash creation
 	createTrashTimer = createTrashTimer - (1 * dt)
